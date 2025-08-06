@@ -1,0 +1,24 @@
+=== MATTERMOST VIDEO PLUGIN - PACKAGE BUILD SUMMARY ===
+
+✅ BUILD STATUS: PARTIAL SUCCESS
+
+📦 Created Package:
+   File: dist/com.mattermost.video-plugin-1.0.0.zip
+   Size: 13.5 KB
+   Date: 08/06/2025 11:43:36
+
+✅ INCLUDED:
+   - plugin.json (manifest)
+   - webapp/dist/main.js (React components)
+   - webapp/dist/main.js.map (source maps)
+
+⚠️  MISSING (requires Go installation):
+   - server/dist/plugin-linux-amd64
+   - server/dist/plugin-darwin-amd64
+   - server/dist/plugin-windows-amd64.exe
+
+📋 NEXT STEPS:
+   1. Install Go 1.21+
+   2. Build server executables
+   3. Rebuild complete package
+   4. Install in Mattermost 10.0+
