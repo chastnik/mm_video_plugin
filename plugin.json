@@ -3,7 +3,7 @@
     "name": "Video Plugin",
     "description": "Плагин для просмотра видео файлов и генерации превью в Mattermost",
     "version": "1.0.0",
-    "min_server_version": "5.12.0",
+    "min_server_version": "10.0.0",
     "server": {
         "executables": {
             "linux-amd64": "server/dist/plugin-linux-amd64",

@@ -8,6 +8,7 @@ GO_BUILD_FLAGS ?=
 MM_UTILITIES_DIR ?= ../mattermost-utilities
 
 export GO111MODULE=on
+export GOPROXY=https://proxy.golang.org,direct
 
 # Определение версии плагина из манифеста
 PLUGIN_ID := $(shell cat $(MANIFEST_FILE) | python3 -c 'import sys,json;print(json.load(sys.stdin)["id"])')
