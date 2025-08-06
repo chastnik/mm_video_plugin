@@ -1,0 +1,51 @@
+{
+    "id": "com.mattermost.video-plugin",
+    "name": "Video Plugin",
+    "description": "Плагин для просмотра видео файлов и генерации превью в Mattermost",
+    "version": "1.0.0",
+    "min_server_version": "5.12.0",
+    "server": {
+        "executables": {
+            "linux-amd64": "server/dist/plugin-linux-amd64",
+            "darwin-amd64": "server/dist/plugin-darwin-amd64",
+            "windows-amd64": "server/dist/plugin-windows-amd64.exe"
+        }
+    },
+    "webapp": {
+        "bundle_path": "webapp/dist/main.js"
+    },
+    "settings_schema": {
+        "header": "Настройки видео плагина",
+        "footer": "",
+        "settings": [
+            {
+                "key": "EnableVideoPreview",
+                "display_name": "Включить превью видео",
+                "type": "bool",
+                "help_text": "Включает автоматическую генерацию превью для видео файлов",
+                "default": true
+            },
+            {
+                "key": "SupportedFormats",
+                "display_name": "Поддерживаемые форматы",
+                "type": "text",
+                "help_text": "Список поддерживаемых видео форматов через запятую",
+                "default": "mp4,avi,mov,wmv,flv,webm,mkv,m4v"
+            },
+            {
+                "key": "MaxFileSize",
+                "display_name": "Максимальный размер файла (MB)",
+                "type": "number",
+                "help_text": "Максимальный размер видео файла для обработки в мегабайтах",
+                "default": 100
+            },
+            {
+                "key": "PreviewDuration",
+                "display_name": "Длительность превью (секунды)",
+                "type": "number",
+                "help_text": "Время в секундах, с которого генерировать превью",
+                "default": 5
+            }
+        ]
+    }
+} 

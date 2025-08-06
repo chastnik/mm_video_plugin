@@ -1,0 +1,106 @@
+# Сборочные файлы
+dist/
+server/dist/
+webapp/dist/
+*.tar.gz
+
+# Зависимости
+node_modules/
+webapp/.npminstall
+server/vendor/
+
+# Логи
+*.log
+logs/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Временные файлы
+*.tmp
+*.temp
+.DS_Store
+Thumbs.db
+
+# IDE файлы
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Go файлы
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+*.test
+*.out
+go.work
+
+# Тестовые файлы
+coverage.txt
+coverage.out
+.nyc_output/
+coverage/
+
+# Переменные окружения
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Кэш
+.npm
+.eslintcache
+*.tsbuildinfo
+
+# Операционные системы
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Резервные копии
+*.bak
+*.backup
+*.orig
+
+# Пользовательские конфигурации
+config.local.json
+local.json
+
+# Сертификаты
+*.pem
+*.key
+*.crt
+*.cert
+
+# Временные видео файлы (для тестирования)
+test_videos/
+sample_videos/
+*.mp4
+*.avi
+*.mov
+*.wmv
+*.flv
+*.webm
+*.mkv
+*.m4v
+
+# Превью файлы
+previews/
+thumbnails/
+*.jpg
+*.jpeg
+*.png
+*.gif
+
+# Документация (генерируемая)
+docs/build/
+docs/_build/ 
