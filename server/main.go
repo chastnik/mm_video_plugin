@@ -10,9 +10,7 @@ import (
 	"os"
 	"os/exec"
 	"path/filepath"
-	"strconv"
 	"strings"
-	"time"
 
 	"github.com/mattermost/mattermost/server/public/model"
 	"github.com/mattermost/mattermost/server/public/plugin"
@@ -59,7 +57,7 @@ func (p *Plugin) isSupportedVideoFormat(filename string) bool {
 	if ext != "" && ext[0] == '.' {
 		ext = ext[1:]
 	}
-	
+
 	formats := strings.Split(strings.ToLower(config.SupportedFormats), ",")
 	for _, format := range formats {
 		if strings.TrimSpace(format) == ext {
@@ -76,7 +74,7 @@ func (p *Plugin) FileWillBeUploaded(c *plugin.Context, info *model.FileInfo, fil
 	}
 
 	config := p.getConfiguration()
-	
+
 	// Проверяем размер файла
 	if info.Size > int64(config.MaxFileSize*1024*1024) {
 		return info, "Размер видео файла превышает максимально допустимый"
@@ -114,7 +112,7 @@ func (p *Plugin) MessageWillBePosted(c *plugin.Context, post *model.Post) (*mode
 		if err != nil {
 			continue
 		}
-		
+
 		if p.isSupportedVideoFormat(fileInfo.Name) {
 			hasVideo = true
 			// Генерируем превью для видео файла
@@ -136,14 +134,13 @@ func (p *Plugin) MessageWillBePosted(c *plugin.Context, post *model.Post) (*mode
 // generateVideoPreview генерирует превью для видео файла
 func (p *Plugin) generateVideoPreview(fileId string, fileInfo *model.FileInfo) {
 	config := p.getConfiguration()
-	
+
 	// Получаем файл
-	fileReader, err := p.API.GetFile(fileId)
-	if err != nil {
-		p.API.LogError("Ошибка получения файла", "fileId", fileId, "error", err.Error())
+	fileReader, appErr := p.API.GetFile(fileId)
+	if appErr != nil {
+		p.API.LogError("Ошибка получения файла", "fileId", fileId, "error", appErr.Error())
 		return
 	}
-	defer fileReader.Close()
 
 	// Создаем временный файл
 	tmpDir := os.TempDir()
@@ -159,13 +156,13 @@ func (p *Plugin) generateVideoPreview(fileId string, fileInfo *model.FileInfo) {
 	defer os.Remove(inputFile)
 	defer file.Close()
 
-	if _, err := io.Copy(file, fileReader); err != nil {
+	if _, err := io.Copy(file, bytes.NewReader(fileReader)); err != nil {
 		p.API.LogError("Ошибка записи во временный файл", "error", err.Error())
 		return
 	}
 
 	// Генерируем превью с помощью FFmpeg
-	cmd := exec.Command("ffmpeg", 
+	cmd := exec.Command("ffmpeg",
 		"-i", inputFile,
 		"-ss", fmt.Sprintf("%d", config.PreviewDuration),
 		"-vframes", "1",
@@ -184,23 +181,16 @@ func (p *Plugin) generateVideoPreview(fileId string, fileInfo *model.FileInfo) {
 	defer os.Remove(outputFile)
 
 	// Загружаем превью как новый файл
-	previewFile, err := os.Open(outputFile)
+	previewData, err := os.ReadFile(outputFile)
 	if err != nil {
-		p.API.LogError("Ошибка открытия файла превью", "error", err.Error())
+		p.API.LogError("Ошибка чтения файла превью", "error", err.Error())
 		return
-	}
-	defer previewFile.Close()
-
-	previewInfo := &model.FileInfo{
-		Name:      fmt.Sprintf("preview_%s.jpg", fileInfo.Name),
-		MimeType:  "image/jpeg",
-		Extension: "jpg",
 	}
 
 	// Сохраняем превью
-	savedPreview, err := p.API.UploadFile(previewFile, previewInfo)
-	if err != nil {
-		p.API.LogError("Ошибка сохранения превью", "error", err.Error())
+	savedPreview, appErr := p.API.UploadFile(previewData, fmt.Sprintf("preview_%s.jpg", fileInfo.Name), fmt.Sprintf("preview_%s.jpg", fileId))
+	if appErr != nil {
+		p.API.LogError("Ошибка сохранения превью", "error", appErr.Error())
 		return
 	}
 
@@ -269,4 +259,4 @@ func (p *Plugin) handleVideoPreview(w http.ResponseWriter, r *http.Request) {
 
 func main() {
 	plugin.ClientMain(&Plugin{})
-} 
+}
